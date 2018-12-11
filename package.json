@@ -11,9 +11,14 @@
     "node-sass": "^4.9.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
     "JSONStream": "^1.0.6",
+    "babelify": "^10.0.0",
     "browserify": "^12.0.1",
     "browserify-css": "^0.8.1",
+    "buffered-xhr-stream": "^0.1.5",
+    "compression": "^1.7.3",
     "double-tap": "^1.0.2",
     "request": "^2.36.0",
     "smokestack": "^3.4.1",
@@ -21,12 +26,12 @@
     "watchify": "^3.6.1"
   },
   "scripts": {
-    "bundle": "browserify -r ./index.js:tree -r http -r JSONStream > example/bundle.js -d",
+    "bundle": "browserify -r ./index.js:tree -r http -r buffered-xhr-stream -r JSONStream -t [ babelify --presets [ @babel/preset-env ] ] > example/bundle.js -d",
     "css": "node-sass tree.scss > dist/tree.css",
     "postinstall": "npm run css",
     "start": "node example/server.js",
     "test": "browserify -t browserify-css test/* | double-tap smokestack",
-    "watch": "watchify -r ./index.js:tree -r http -r JSONStream -o example/bundle.js -d"
+    "watch": "watchify -r ./index.js:tree -r http -r buffered-xhr-stream -r JSONStream -t [ babelify --presets [ @babel/preset-env ] ] -o example/bundle.js -d"
   },
   "repository": {
     "type": "git",
