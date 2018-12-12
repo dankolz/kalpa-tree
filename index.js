@@ -14,8 +14,53 @@ var d3 = require('d3-selection')
   , layout = require('./lib/layout')
   , identity = function (v) { return v }
 
+var http = require('stream-http')
+  , JSONStream = require('JSONStream')
 // Mix transitions into d3-selection's prototype
 require('d3-transition')
+
+window.treeHttp = require('stream-http')
+window.sa = require('stream-json/streamers/StreamArray');
+
+window.clarinet = require('clarinet')
+window.sj = require('stream-json')
+// console.log(clarinet)
+// console.log(sj)
+// console.log('did this run')
+// let foo = require('clarinet-object-stream')
+// console.log(foo)
+    // }, 3000)
+let latest = require('json-stream')
+
+window.treeJawns = function () {
+  console.log('running tree jawns')
+  // http.get('http://dash-dev.com:8080/api/cubes/trees/1/tree-file', function (res) {
+  http.get('http://dash-dev.com:3000/rollup.json', function (res) {
+      // res.pipe(JSONStream.parse([true]))
+      let pipeline = res.pipe(JSONStream.parse([true]))
+      // let pipeline = res.pipe(latest())
+      // let pipeline = res.pipe(clarinet.createStream())
+      // let baz = new foo
+      // let pipeline = res.pipe(baz)
+      // let pipeline = res.pipe(window.sa.withParser())
+      let nodes = []
+      baz.on('data', d => {
+        nodes.push(d)
+      })
+      baz.on('end', function () {
+        console.log('done with', nodes)
+      })
+      // res.pipe(window.sa.withParser()).on('data', function (d) { console.log(d)})
+    //   //   .on('end', d => {
+    //   //     console.log('got some data')
+    //   //   })
+    //   // return
+        // stream: buffered.pipe(JSONStream.parse([true])),
+        // stream: res.pipe(JSONStream.parse([true])),
+    // res.on('data', () => {})
+    res.on('end', () => { console.log('kalpa-tree implment finish')})
+  })
+}
 
 var merge = function (from, to) {
   to = to || {}
@@ -62,7 +107,7 @@ var defaults = function () {
     contents: require('./lib/contents'),
     indentableSelector: ':first-child', // The element within the `.node` which will be used for showing tree indentations
                                         // Only need to update if using different `contents`
-    performanceThreshold: 1000, // If the node data count exceeds this threshold, the tree goes into performance mode
+    performanceThreshold: 100000000, // If the node data count exceeds this threshold, the tree goes into performance mode
     accessors: {
       id: 'id',
       label: 'label',

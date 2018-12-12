@@ -143,7 +143,10 @@
       , JSONStream = require('JSONStream')
       , container = document.querySelector('.container')
       , bt = document.querySelector('.tree-bottom-toolbar')
-      , tree
+      , d3 = require('d3')
+      , request = require('d3-request')
+      , Readable = require('stream').Readable
+
 
     var flip = false // hack
     bt.querySelector('.expand-all').onclick = function () {
@@ -180,39 +183,96 @@
     document.querySelector('#select').addEventListener('change', function () {
       tree.select(this.value)
     })
+    // let buffered = new XhrStream({url: '/rollup.json'})
 
-    // http.get('/documents.json', function (res) {
-    // http.get('/15-k-nodes.json', function (res) {
-    http.get('/sms-tree.json', function (res) {
-      tree = new Tree({
-        stream: res.pipe(JSONStream.parse([true])),
-        accessors: {
-          icon: 'nodeType'
-        },
-        initialSelection: 1005
+    // request.json('http://dash-dev.com:3000/rollup.json', function (rollup) {
+    //   var rs = new Readable({
+    //       objectMode: true,
+    //       read: function () {
+    //         var node = rollup.shift()
+    //         if (!node) {
+    //           return this.push(null)
+    //         }
+    //         this.push(node)
+    //       }
+    //     })
+    //     , tree = new Tree({
+    //       stream: rs,
+    //       accessors: {
+    //         icon: 'nodeType'
+    //       },
+    //       initialSelection: 1005
+    //     })
+
+    //   tree.on('error', function (e) {
+    //     console.log('tree error', e)
+    //   })
+
+    //   tree.on('move', function (node, newParent, previousParent, newIndex, prevIndex) {
+    //     console.log(node)
+    //     console.log(previousParent)
+    //     console.log(newParent)
+    //     console.log(newIndex)
+    //     console.log(prevIndex)
+    //   })
+
+    //   // Let's be naughty for demo usage
+    //   window.tree = tree
+
+    //   container.appendChild(tree.render().el.node())
+
+    //   tree.on('select', function (node) {
+    //     console.log(node)
+    //   })
+
+    //   // rollup.forEach(function (node) {
+    //   //   rs.push(node)
+    //   // })
+    //   // rs.push(null)
+    // //   // console.log(rollup)
+    // })
+
+      window.treeJawns()
+      return
+      // http.get('/documents.json', function (res) {
+      // http.get('/15-k-nodes.json', function (res) {
+      http.get('/scoreboard-rollup.json', function (res) {
+      //   // res.pipe(JSONStream.parse([true]))
+      //   //   .on('end', d => {
+      //   //     console.log('got some data')
+      //   //   })
+      //   // return
+        tree = new Tree({
+          // stream: buffered.pipe(JSONStream.parse([true])),
+          stream: res.pipe(JSONStream.parse([true])),
+          accessors: {
+            icon: 'nodeType'
+          },
+          initialSelection: 1005
+        })
+
+        tree.on('error', function (e) {
+          console.log('tree error', e)
+        })
+
+        tree.on('move', function (node, newParent, previousParent, newIndex, prevIndex) {
+          console.log(node)
+          console.log(previousParent)
+          console.log(newParent)
+          console.log(newIndex)
+          console.log(prevIndex)
+        })
+
+        // Let's be naughty for demo usage
+        window.tree = tree
+
+        container.appendChild(tree.render().el.node())
+
+        tree.on('select', function (node) {
+          console.log(node)
+        })
       })
 
-      tree.on('error', function (e) {
-        console.log('tree error', e)
-      })
-
-      tree.on('move', function (node, newParent, previousParent, newIndex, prevIndex) {
-        console.log(node)
-        console.log(previousParent)
-        console.log(newParent)
-        console.log(newIndex)
-        console.log(prevIndex)
-      })
-
-      // Let's be naughty for demo usage
-      window.tree = tree
-
-      container.appendChild(tree.render().el.node())
-
-      tree.on('select', function (node) {
-        console.log(node)
-      })
-    })
   })()
 
 </script>

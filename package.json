@@ -4,21 +4,26 @@
   "description": "An efficient hierarchical tree for the dom",
   "main": "index.js",
   "dependencies": {
+    "clarinet": "^0.12.1",
+    "clarinet-object-stream": "0.0.3",
     "d3-drag": "^1.0.1",
     "d3-selection": "^1.0.2",
     "d3-transition": "^1.0.3",
     "escape-string-regexp": "^1.0.3",
-    "node-sass": "^4.9.0"
+    "json-stream": "^1.0.0",
+    "node-sass": "^4.9.0",
+    "stream-json": "^1.1.3"
   },
   "devDependencies": {
     "@babel/core": "^7.2.0",
     "@babel/preset-env": "^7.2.0",
-    "JSONStream": "^1.0.6",
+    "JSONStream": "^1.3.5",
     "babelify": "^10.0.0",
-    "browserify": "^12.0.1",
+    "browserify": "^13.3.0",
     "browserify-css": "^0.8.1",
     "buffered-xhr-stream": "^0.1.5",
     "compression": "^1.7.3",
+    "d3-request": "^1.0.6",
     "double-tap": "^1.0.2",
     "request": "^2.36.0",
     "smokestack": "^3.4.1",
@@ -26,12 +31,12 @@
     "watchify": "^3.6.1"
   },
   "scripts": {
-    "bundle": "browserify -r ./index.js:tree -r http -r buffered-xhr-stream -r JSONStream -t [ babelify --presets [ @babel/preset-env ] ] > example/bundle.js -d",
+    "bundle": "browserify -r ./index.js:tree -r stream -r d3-selection:d3 -r d3-request -r http -r buffered-xhr-stream -r JSONStream -t [ babelify --presets [ @babel/preset-env ] ] > example/bundle.js -d",
     "css": "node-sass tree.scss > dist/tree.css",
     "postinstall": "npm run css",
     "start": "node example/server.js",
     "test": "browserify -t browserify-css test/* | double-tap smokestack",
-    "watch": "watchify -r ./index.js:tree -r http -r buffered-xhr-stream -r JSONStream -t [ babelify --presets [ @babel/preset-env ] ] -o example/bundle.js -d"
+    "watch": "watchify -r ./index.js:tree -r stream -r d3-selection:d3 -r d3-request -r http -r buffered-xhr-stream -r JSONStream -t [ babelify --presets [ @babel/preset-env ] ] -o example/bundle.js -d"
   },
   "repository": {
     "type": "git",

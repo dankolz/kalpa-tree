@@ -9,6 +9,16 @@ http.createServer(function (req, res) {
   var _url = url.parse(req.url, true)
     , path = _url.pathname
 
+  if (path == '/rollup.json') {
+    return fs.createReadStream('/Users/koopa/Desktop/rollup.json').pipe(res)
+  }
+
+  if (path === '/scoreboard-rollup.json') {
+    // -H Pragma: no-cache -H Accept-Encoding: gzip, deflate -H Accept-Language: en-US,en;q=0.9 -H User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 -H Accept: */* -H Referer: http://dash-dev.com:8080/admin/cubes/trees/1 -H Cookie: JSESSIONID=ED905E4FC48FA4D2377A411AAB221E53 -H Connection: keep-alive -H Cache-Control: no-cache
+    return request('http://dash-dev.com:8080/api/cubes/trees/1/tree-file')
+            .pipe(res)
+  }
+
   if (path == '/index.html' || path == '/') {
     return fs.createReadStream(__dirname + '/index.html').pipe(res)
   } else if (path == '/tree.css') {
